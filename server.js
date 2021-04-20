@@ -49,6 +49,7 @@ app.post("/api/notes", (req, res) => {
                 console.log(error)
             }
         })
+        return res.json(userInput)
     })
 })
 
@@ -58,15 +59,32 @@ app.delete('/api/notes/:id', (req, res) => {
             console.log(error)
         }
         const currentNotes = JSON.parse(data)
-        console.log("____________________________________")
-        console.log(currentNotes)
+        console.log("_______________")
+        //console.log(currentNotes)
+        //console.log(req.params.id)
+        console.log(typeof req.params.id)
 
-        const deleteNotes = (id) => {
-            currentNotes.filter(this.id !== id)
-            return currentNotes
-        }
 
-        deleteNotes(req.params.id)
+
+        currentNotes.forEach((e, i) => {
+            console.log(e.id + req.params.id)
+            if (e.id == req.params.id) {
+
+                currentNotes.splice(i, 1)
+                console.log(currentNotes)
+            }
+
+        });
+
+
+        fs.writeFile(path.join(__dirname, '/db/db.json'), JSON.stringify(currentNotes), (error) => {
+            if (error) {
+                console.log(error)
+            }
+            console.log("entry deleted")
+        })
+
+        res.json(currentNotes)
     })
 })
 
